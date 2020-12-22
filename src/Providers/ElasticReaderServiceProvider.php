@@ -26,15 +26,17 @@ class ElasticReaderServiceProvider extends ServiceProvider
         $this->app->register(EventServiceProvider::class);
 
         $this->app->bind(Elastic::class, function ($app) {
-            $logger = new Logger('log');
-            $logger->pushHandler(new StreamHandler(config('elastic_search.logPath'), Logger::WARNING));
-
-            return new Elastic(
-                ClientBuilder::create()
-                             ->setHosts(config('elastic_search.hosts'))
-                             ->setLogger($logger)
-                             ->build()
-            );
+            $clientBuilder = ClientBuilder::create()
+                    ->setHosts(config('elastic_search.hosts'));
+            
+            if (config('elastic_search.logger_enabled')) {
+                $logger = new Logger('log');
+                $handler = new StreamHandler(config('elastic_search.logPath'), Logger::WARNING);
+                $logger->pushHandler($handler);
+                $clientBuilder->setLogger($logger);
+            }
+            
+            return new Elastic($clientBuilder->build());
         });
     }
 }
