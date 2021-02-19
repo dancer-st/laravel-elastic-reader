@@ -9,9 +9,9 @@ use Illuminate\Pagination\Paginator as LaravelPaginator;
 
 class Paginator
 {
-    CONST PREVIOUS_PAGE = 'previous_page';
-    CONST LAST_SEARCHED = 'last_searched';
-    CONST SIZE_LIMIT = 10000;
+    const PREVIOUS_PAGE = 'previous_page';
+    const LAST_SEARCHED = 'last_searched';
+    const SIZE_LIMIT    = 10000;
 
     private $searchModel;
     private $currentPage  = 1;
@@ -50,8 +50,8 @@ class Paginator
 
     private function init(SearchModelNew $searchModel, int $perPage)
     {
-        $this->searchModel = $searchModel;
-        $this->currentPage = LaravelPaginator::resolveCurrentPage();
+        $this->searchModel  = $searchModel;
+        $this->currentPage  = LaravelPaginator::resolveCurrentPage();
         $this->perPage      = $perPage;
         $this->total        = $searchModel->getTotal();
         $this->previousPage = $this->getPreviousPage();
@@ -200,6 +200,18 @@ class Paginator
 
     private function getLastSearched()
     {
-        return request()->get(self::LAST_SEARCHED);
+        $lastSearched = request()->get(self::LAST_SEARCHED);
+
+        if (empty($lastSearched))
+        {
+            return $lastSearched;
+        }
+
+        return array_map(
+            function ($val) {
+                return is_numeric($val) ? $val + 0 : $val;
+            },
+            $lastSearched
+        );
     }
 }

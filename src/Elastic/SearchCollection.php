@@ -86,9 +86,9 @@ class SearchCollection extends Collection
     }
 
 
-    public function setTotal(int $total)
+    public function setTotal($total)
     {
-        $this->total = $total;
+        $this->total = $total['value'];
 
         return $this;
     }
