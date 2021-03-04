@@ -36,6 +36,13 @@ class QueryBuilder
         return $this;
     }
 
+    public function setTrackTotalHits()
+    {
+        $this->query['track_total_hits'] = true;
+
+        return $this;
+    }
+
     public function searchAfter($searchAfter)
     {
         if ($searchAfter)
